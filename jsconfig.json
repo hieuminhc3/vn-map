@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["src/*"],
+      "ProcessingRecords/*": ["src/apps/RecordsAndCadastral/features/ProcessingRecords/*"]
+    }
+  }
+}
