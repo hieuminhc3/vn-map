@@ -1,23 +1,26 @@
-import React, { useState } from "react";
-import { BottomRightWrapper, BottomRightButton } from "./styled";
-import GpsFixedIcon from "@mui/icons-material/GpsFixed";
-import ZoomInIcon from "@mui/icons-material/ZoomIn";
-import ZoomOutIcon from "@mui/icons-material/ZoomOut";
-import ThreeDRotationIcon from "@mui/icons-material/ThreeDRotation";
-import NavigationIcon from "@mui/icons-material/Navigation";
-import Tooltip from "@mui/material/Tooltip";
-import "../../../../styles/styles.css";
-import "./styles.css";
-import { useSelector } from "react-redux";
-import { mapSelector } from "~/features/map/mapSlice";
-import RotateLeftIcon from "@mui/icons-material/RotateLeft";
-import RotateRightIcon from "@mui/icons-material/RotateRight";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import GpsFixedIcon from "@mui/icons-material/GpsFixed";
+import NavigationIcon from "@mui/icons-material/Navigation";
+import RotateLeftIcon from "@mui/icons-material/RotateLeft";
+import RotateRightIcon from "@mui/icons-material/RotateRight";
+import ThreeDRotationIcon from "@mui/icons-material/ThreeDRotation";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
+import ZoomOutIcon from "@mui/icons-material/ZoomOut";
+import CircularProgress from "@mui/material/CircularProgress";
+import Tooltip from "@mui/material/Tooltip";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { mapSelector } from "~/features/map/mapSlice";
+import "../../../../styles/styles.css";
+import { BottomRightButton, BottomRightWrapper } from "./styled";
+import "./styles.css";
 
 const BottomRight = () => {
+  const [isLoadingCurrentLocation, setIsLoadingCurrentLocation] =
+    useState(false);
   const [is3D, setIs3D] = useState(false);
   const mapOptions = {
     tilt: 0,
@@ -36,6 +39,8 @@ const BottomRight = () => {
   };
   const { map } = useSelector(mapSelector);
   function initWebGLOverlayView(map) {
+    map.overlayMapTypes.pop();
+    map.setZoom(10);
     let scene, renderer, camera, loader;
     const webGLOverlayView = new window.google.maps.WebGLOverlayView();
 
@@ -109,12 +114,48 @@ const BottomRight = () => {
     };
     webGLOverlayView.setMap(map);
   }
+  function getLocation() {
+    setIsLoadingCurrentLocation(true);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  }
+  function showPosition(pos) {
+    var latLng = new window.google.maps.LatLng(
+      pos.coords.latitude,
+      pos.coords.longitude
+    );
+    var marker = new window.google.maps.Marker({
+      position: latLng,
+      map: map,
+      icon: {
+        path: window.google.maps.SymbolPath.CIRCLE,
+        scale: 10,
+        fillOpacity: 1,
+        strokeWeight: 2,
+        fillColor: "#5384ED",
+        strokeColor: "#ffffff",
+      },
+    });
+    marker.setPosition(map);
+    map.setCenter(latLng);
+    setIsLoadingCurrentLocation(false);
+  }
   return (
     <>
       <BottomRightWrapper right="10px" height="212px">
         <Tooltip title="Vị trí hiện tại" placement="left">
-          <BottomRightButton className="border-radius-4 btn-hover">
-            <GpsFixedIcon color="action" />
+          <BottomRightButton
+            className="border-radius-4 btn-hover"
+            onClick={getLocation}
+          >
+            {isLoadingCurrentLocation ? (
+              <CircularProgress size={20} />
+            ) : (
+              <GpsFixedIcon color="action" />
+            )}
           </BottomRightButton>
         </Tooltip>
         <div>

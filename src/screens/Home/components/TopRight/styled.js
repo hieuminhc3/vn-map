@@ -10,7 +10,7 @@ export const TopRightWrapper = styled.div`
   right: 10px;
 `;
 
-export const UserInfoWrapper = styled.div`
+export const PopoverWrapper = styled.div`
   width: 358px;
   overflow: scroll;
   overflow-y: hidden;

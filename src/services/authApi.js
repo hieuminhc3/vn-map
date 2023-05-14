@@ -9,6 +9,14 @@ const authApi = {
     const url = "/auth/getInfo";
     return axiosClient.get(url);
   },
+  updateInfo(form) {
+    const url = "/auth/update/info";
+    return axiosClient.post(url, form, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
 };
 
 export default authApi;

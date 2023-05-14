@@ -1,14 +1,15 @@
 import React from "react";
+import { BottomLeft, BottomRight, Map, TopLeft, TopRight } from "./components";
 import { HomeScreenWrapper } from "./styled";
-import { BottomRight, TopLeft, TopRight, Map } from "./components";
 
 const HomeScreen = () => {
   return (
     <HomeScreenWrapper>
+      <Map />
       <TopLeft />
       <TopRight />
       <BottomRight />
-      <Map />
+      <BottomLeft />
     </HomeScreenWrapper>
   );
 };

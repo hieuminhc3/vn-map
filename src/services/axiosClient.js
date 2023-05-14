@@ -29,7 +29,7 @@ axiosClient.interceptors.response.use(
     // Do something with response data
     if (response.status === 200) {
       if (response.data?.code === 2000) {
-        return response.data.data;
+        return response.data;
       } else if (response.data?.code === 4004) {
         return response.data;
       } else if (response.data?.code === 4000) {

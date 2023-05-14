@@ -1,5 +1,5 @@
 import ErrorPage from "./error-page";
-import { AuthenScreen, HomeScreen } from "../screens";
+import { AuthenScreen, HomeScreen, UserScreen } from "../screens";
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 
@@ -16,6 +16,10 @@ export const router = createBrowserRouter([
       {
         path: "/authen",
         element: <AuthenScreen />,
+      },
+      {
+        path: "/user/profile/detail",
+        element: <UserScreen />,
       },
     ],
   },

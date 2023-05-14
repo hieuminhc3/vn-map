@@ -32,9 +32,8 @@ export default function Login() {
       },
       {
         onSuccess: (data) => {
-          console.log("data:", data);
-          localStorage.setItem("accessToken", data.accessToken);
-          localStorage.setItem("refreshToken", data.refreshToken);
+          localStorage.setItem("accessToken", data.data.accessToken);
+          localStorage.setItem("refreshToken", data.data.refreshToken);
           toast.success("Đăng nhập thành công", {
             position: "top-center",
             autoClose: 2000,

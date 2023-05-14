@@ -3,13 +3,12 @@ import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useGetUserInfo from "./hooks/useGetUserInfo";
 import {
   CardContainer,
   ColumnContainer,
   RowContainer,
   TopRightWrapper,
-  UserInfoWrapper,
+  PopoverWrapper,
 } from "./styled";
 import CloseIcon from "@mui/icons-material/Close";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
@@ -21,6 +20,7 @@ import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import "~/styles/styles.css";
+import useGetUserInfo from "~/hooks/useGetUserInfo";
 
 const TopRight = () => {
   const navigate = useNavigate();
@@ -75,7 +75,7 @@ const TopRight = () => {
           horizontal: "left",
         }}
       >
-        <UserInfoWrapper>
+        <PopoverWrapper>
           <RowContainer>
             <span className="text-lg-semibold">Tài khoản</span>
             <CloseIcon
@@ -92,6 +92,9 @@ const TopRight = () => {
             paddingBottom="8px"
             cursor="pointer"
             activeHover={true}
+            onClick={() => {
+              navigate("/user/profile/detail");
+            }}
           >
             <div style={{ display: "flex", alignItems: "center" }}>
               <Avatar
@@ -248,7 +251,7 @@ const TopRight = () => {
               <span style={{ color: "#D92D20" }}>Đăng xuất</span>
             </div>
           </RowContainer>
-        </UserInfoWrapper>
+        </PopoverWrapper>
       </Popover>
     </TopRightWrapper>
   );
