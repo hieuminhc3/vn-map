@@ -51,10 +51,18 @@ const TopLeft = () => {
   const [openPopperNT, setOpenPopperNT] = useState(false);
   const [placementNT, setPlacementNT] = useState();
 
+  const [anchorElNH, setAnchorElNH] = useState(null);
+  const [openPopperNH, setOpenPopperNH] = useState(false);
+  const [placementNH, setPlacementNH] = useState();
+
+  const [anchorElTN, setAnchorElTN] = useState(null);
+  const [openPopperTN, setOpenPopperTN] = useState(false);
+  const [placementTN, setPlacementTN] = useState();
+
   const handleClick = (newPlacement, type) => (event) => {
     setOpenPopperQH(false);
     setOpenPopperHT(false);
-    setOpenPopperNT(false);
+    setOpenPopperNT(type === "NH" || type === "TN" ? true : false);
     if (type === "QH") {
       setAnchorElQH(event.currentTarget);
       setOpenPopperQH((prev) => placementQH !== newPlacement || !prev);
@@ -63,6 +71,16 @@ const TopLeft = () => {
       setAnchorElHT(event.currentTarget);
       setOpenPopperHT((prev) => placementHT !== newPlacement || !prev);
       setPlacementHT(newPlacement);
+    } else if (type === "NH") {
+      setOpenPopperTN(false);
+      setAnchorElNH(event.currentTarget);
+      setOpenPopperNH((prev) => placementNH !== newPlacement || !prev);
+      setPlacementNH(newPlacement);
+    } else if (type === "TN") {
+      setOpenPopperNH(false);
+      setAnchorElTN(event.currentTarget);
+      setOpenPopperTN((prev) => placementTN !== newPlacement || !prev);
+      setPlacementTN(newPlacement);
     }
   };
 
@@ -124,6 +142,8 @@ const TopLeft = () => {
             setOpenPopperQH(false);
             setOpenPopperHT(false);
             setOpenPopperNT(false);
+            setOpenPopperNH(false);
+            setOpenPopperTN(false);
           }}
         >
           <ContentWrapper>
@@ -141,18 +161,40 @@ const TopLeft = () => {
               <b>Nông nghiệp</b>
             </ColumnWrapper>
             <Popup
+              setOpen={setOpen}
               openPopper={openPopperHT}
               anchorEl={anchorElHT}
               placement={placementHT}
               title="Hiện trạng"
               setOpenPopper={setOpenPopperHT}
+              type={3}
             />
             <Popup
+              setOpen={setOpen}
               openPopper={openPopperQH}
               anchorEl={anchorElQH}
               placement={placementQH}
               title="Quy hoạch"
               setOpenPopper={setOpenPopperQH}
+              type={4}
+            />
+            <Popup
+              setOpen={setOpen}
+              openPopper={openPopperNH}
+              anchorEl={anchorElNH}
+              placement={placementNH}
+              title="Nông hoá"
+              setOpenPopper={setOpenPopperNH}
+              type={2}
+            />
+            <Popup
+              setOpen={setOpen}
+              openPopper={openPopperTN}
+              anchorEl={anchorElTN}
+              placement={placementTN}
+              title="Thổ nhưỡng"
+              setOpenPopper={setOpenPopperTN}
+              type={1}
             />
             <Popper
               open={openPopperNT}
@@ -164,7 +206,7 @@ const TopLeft = () => {
               }}
             >
               {({ TransitionProps }) => (
-                <Fade {...TransitionProps} timeout={350}>
+                <Fade {...TransitionProps} timeout={0}>
                   <SearchBoxPopperWrapper width="220px">
                     <Grid container>
                       <Grid
@@ -187,13 +229,13 @@ const TopLeft = () => {
                         </div>
                       </Grid>
                       <Grid item xs={12}>
-                        <RowWrapper>
+                        <RowWrapper onClick={handleClick("right-start", "NH")}>
                           <ImageIcon src={nonghoa} />
                           <b>Nông hoá</b>
                         </RowWrapper>
                       </Grid>
                       <Grid item xs={12}>
-                        <RowWrapper>
+                        <RowWrapper onClick={handleClick("right-start", "TN")}>
                           <ImageIcon src={thonhuong} />
                           <b>Thổ nhưỡng</b>
                         </RowWrapper>

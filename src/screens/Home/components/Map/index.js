@@ -2,9 +2,10 @@ import { Loader } from "@googlemaps/js-api-loader";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setMap, setPlaceService } from "~/features/map/mapSlice";
+import { getGoogleMapApikey } from "~/utils/StringUtils";
 
 const apiOptions = {
-  apiKey: "AIzaSyC_hHbgWK7Ih0toL_FavH7nw2FfkLaRxt4",
+  apiKey: getGoogleMapApikey(),
   version: "beta",
   libraries: ["places"],
 };

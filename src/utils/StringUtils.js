@@ -10,3 +10,7 @@ export const getPlaceName = (code) => {
   else if (code === "lodging") name = "Khách sạn";
   return name;
 };
+
+export const getGoogleMapApikey = () => {
+  return "AIzaSyBCdBHywFfoBDQKdWBn1-rAusJ0yohygAE";
+};

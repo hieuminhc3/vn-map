@@ -1,7 +1,10 @@
+import { getGoogleMapApikey } from "~/utils/StringUtils";
+
 const googleMapApi = {
   getCurrentLocation: async (data = {}) => {
+    const googleApiKey = getGoogleMapApikey();
     const response = await fetch(
-      "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyC_hHbgWK7Ih0toL_FavH7nw2FfkLaRxt4",
+      `https://www.googleapis.com/geolocation/v1/geolocate?key=${googleApiKey}`,
       {
         method: "POST",
         mode: "cors",

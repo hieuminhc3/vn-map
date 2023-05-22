@@ -30,3 +30,43 @@ export const BottomRightButton = styled.button`
     background-color: #e0e0e0;
   }
 `;
+
+export const LandUseListWrapper = styled.div`
+  width: 350px;
+  height: 600px;
+  background-color: white;
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  padding: 10px;
+`;
+
+export const LandUseList = styled.div`
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  overflow: scroll;
+  background-color: white;
+  height: calc(100% - 40px);
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  gap: 10px;
+`;
+
+export const RowContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const Rectangle = styled.div`
+  background-color: ${(props) =>
+    props.backGroundColor ? props.backGroundColor : "white"};
+  width: 40px;
+  height: 20px;
+  border: 1px solid #333333;
+  border-radius: 4px;
+`;

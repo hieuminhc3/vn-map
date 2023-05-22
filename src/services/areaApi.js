@@ -9,6 +9,10 @@ const areaApi = {
     const url = `/area/getdistrictbymatinh?maTinh=${maTinh}`;
     return axiosClient.get(url);
   },
+  async getWards(maHuyen) {
+    const url = `/area/getwardbymahuyen?maHuyen=${maHuyen}`;
+    return axiosClient.get(url);
+  },
 };
 
 export default areaApi;

@@ -1,18 +1,18 @@
-import React from "react";
-import {
-  Container,
-  AvatarBox,
-  FormBox,
-  Image,
-  AvatarWrapper,
-  UploadLayer,
-} from "./styled";
-import ava from "~/assets/images/ava.jpeg";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { Button, Grid, TextField } from "@mui/material";
+import React from "react";
 import { useForm } from "react-hook-form";
-import useUpdateInfo from "./hooks/useUpdateInfo";
+import ava from "~/assets/images/ava.jpeg";
 import useGetUserInfo from "~/hooks/useGetUserInfo";
+import useUpdateInfo from "./hooks/useUpdateInfo";
+import {
+  AvatarBox,
+  AvatarWrapper,
+  Container,
+  FormBox,
+  Image,
+  UploadLayer,
+} from "./styled";
 
 const General = () => {
   const { mutate: update, isLoading } = useUpdateInfo();

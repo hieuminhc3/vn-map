@@ -6,7 +6,7 @@ const useGetDistricts = (maTinh) =>
     queryKey: ["getDistricts", maTinh],
     queryFn: () => areaApi.getDistricts(maTinh),
     enabled: Boolean(maTinh),
-    // select: data => data?.data
+    select: (data) => data?.data,
   });
 //   useQuery(["getDistricts", maTinh], () => areaApi.getDistricts(maTinh));
 export default useGetDistricts;

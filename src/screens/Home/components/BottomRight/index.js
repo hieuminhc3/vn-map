@@ -15,10 +15,22 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { mapSelector } from "~/features/map/mapSlice";
 import "../../../../styles/styles.css";
-import { BottomRightButton, BottomRightWrapper } from "./styled";
+import {
+  BottomRightButton,
+  BottomRightWrapper,
+  LandUseList,
+  LandUseListWrapper,
+  Rectangle,
+  RowContainer,
+} from "./styled";
 import "./styles.css";
+import MapIcon from "@mui/icons-material/Map";
+import { Fade, Paper, Popper, Typography } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import useGetLandUse from "./hooks/useGetLandUse";
 
 const BottomRight = () => {
+  const { data: landUseList } = useGetLandUse();
   const [isLoadingCurrentLocation, setIsLoadingCurrentLocation] =
     useState(false);
   const [is3D, setIs3D] = useState(false);
@@ -143,9 +155,19 @@ const BottomRight = () => {
     map.setCenter(latLng);
     setIsLoadingCurrentLocation(false);
   }
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
+  const [placement, setPlacement] = React.useState();
+
+  const handleClick = (newPlacement) => (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpen((prev) => placement !== newPlacement || !prev);
+    setPlacement(newPlacement);
+  };
   return (
     <>
-      <BottomRightWrapper right="10px" height="212px">
+      <BottomRightWrapper right="10px" height="252px">
         <Tooltip title="Vị trí hiện tại" placement="left">
           <BottomRightButton
             className="border-radius-4 btn-hover"
@@ -166,7 +188,6 @@ const BottomRight = () => {
           </Tooltip>
           <Tooltip title="Trạng thái" placement="left">
             <BottomRightButton
-              className="border-bottom-left-radius-4 border-bottom-right-radius-4"
               onClick={() => {
                 if (!is3D) {
                   initWebGLOverlayView(map);
@@ -177,6 +198,14 @@ const BottomRight = () => {
               }}
             >
               {!is3D ? <ThreeDRotationIcon color="action" /> : <span>2D</span>}
+            </BottomRightButton>
+          </Tooltip>
+          <Tooltip title="Chú giải" placement="left">
+            <BottomRightButton
+              className="border-bottom-left-radius-4 border-bottom-right-radius-4"
+              onClick={handleClick("left-end")}
+            >
+              <MapIcon color="action" />
             </BottomRightButton>
           </Tooltip>
         </div>
@@ -249,6 +278,63 @@ const BottomRight = () => {
           </BottomRightButton>
         </Tooltip>
       </BottomRightWrapper>
+      <Popper
+        open={open}
+        anchorEl={anchorEl}
+        placement={placement}
+        transition
+        sx={{
+          zIndex: open ? 9999 : undefined,
+        }}
+      >
+        {({ TransitionProps }) => (
+          <Fade {...TransitionProps} timeout={350}>
+            <Paper>
+              <LandUseListWrapper>
+                <RowContainer>
+                  <b>Chú giải</b>
+                  <CloseIcon
+                    color="action"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setOpen(false)}
+                  />
+                </RowContainer>
+                <LandUseList>
+                  <RowContainer>
+                    <span>Tên loại đất</span>
+                    <span>Mã loại đất</span>
+                  </RowContainer>
+
+                  {landUseList?.map((e, i) => (
+                    <RowContainer>
+                      <div
+                        style={{
+                          display: "flex",
+                          width: "80%",
+                          gap: "10px",
+                        }}
+                      >
+                        <Rectangle backGroundColor={`#${e.landColor}`} />
+                        <span style={{ maxWidth: "80%" }}>{e.landName}</span>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          width: "20%",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <span>{e.landCode}</span>
+                      </div>
+                    </RowContainer>
+                  ))}
+                </LandUseList>
+              </LandUseListWrapper>
+            </Paper>
+          </Fade>
+        )}
+      </Popper>
     </>
   );
 };
