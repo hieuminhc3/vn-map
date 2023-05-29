@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { forwardRef, useImperativeHandle } from "react";
 // Import Swiper React components
 // Import Swiper styles
 import "swiper/css";
@@ -6,25 +6,31 @@ import "swiper/css/navigation";
 import { AddressItem, AddressListWrapper } from "./styled";
 import "./styles.css";
 // import required modules
-import useGetAddressList from "./hooks/useGetAddressList";
 import { useDispatch, useSelector } from "react-redux";
-import { mapSelector, pushMarker, setMarkers } from "~/features/map/mapSlice";
-import useGetCurrentLocation from "../../../../../../hooks/useGetCurrentLocation";
+import { mapSelector, setMarkers } from "~/features/map/mapSlice";
 import { getPlaceName } from "~/utils/StringUtils";
+import useGetCurrentLocation from "../../../../../../hooks/useGetCurrentLocation";
 
-export default function AddressList(props) {
+function AddressList(props, ref) {
+  useImperativeHandle(ref, () => ({
+    callback: callback,
+    fitBoundsToVisibleMarkers: fitBoundsToVisibleMarkers,
+    createMarker: createMarker,
+  }));
   const dispatch = useDispatch();
   const {
     setIsOpenResult,
     setPlaceList,
     setIsOpenResultDetail,
     setPlaceDetail,
+    setSearchText,
+    addressList,
   } = props;
-  const { data: addressList } = useGetAddressList();
   const { map, placeService, markers, placeType } = useSelector(mapSelector);
   const { data: currentLocation } = useGetCurrentLocation();
 
-  const handleClick = (type) => {
+  const handleClick = (e) => {
+    setSearchText(e?.name);
     setIsOpenResultDetail(false);
     map.overlayMapTypes.pop();
     if (Array.isArray(markers) && markers.length > 0)
@@ -37,7 +43,7 @@ export default function AddressList(props) {
       let request = {
         location: pyrmont,
         radius: "1500",
-        type: [type],
+        type: [e?.code],
         language: "vi",
       };
       placeService.nearbySearch(request, callback);
@@ -46,6 +52,7 @@ export default function AddressList(props) {
 
   function callback(results, status) {
     if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+      console.log("result:", results);
       let replaceMarkers = [];
       setPlaceList(results);
       for (var i = 0; i < results.length; i++) {
@@ -93,10 +100,12 @@ export default function AddressList(props) {
   return (
     <AddressListWrapper>
       {addressList?.map((e, i) => (
-        <AddressItem key={i} onClick={() => handleClick(e?.code)}>
+        <AddressItem key={i} onClick={() => handleClick(e)}>
           {e.name}
         </AddressItem>
       ))}
     </AddressListWrapper>
   );
 }
+
+export default forwardRef(AddressList);

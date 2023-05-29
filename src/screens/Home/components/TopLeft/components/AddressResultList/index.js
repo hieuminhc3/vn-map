@@ -26,7 +26,7 @@ const AddressResultList = (props) => {
                 setPlaceDetail({
                   name: e.name,
                   type: getPlaceName(e.types[0]),
-                  address: e.vicinity,
+                  address: e.vicinity || e.formatted_address,
                 });
               }}
             >
@@ -36,7 +36,9 @@ const AddressResultList = (props) => {
                   <span className="text-md-normal">
                     {getPlaceName(e.types[0])}
                   </span>
-                  <span className="text-md-normal">{e.vicinity}</span>
+                  <span className="text-md-normal">
+                    {e.vicinity || e.formatted_address}
+                  </span>
                 </AddressResultContent>
                 <Image src={addressDefault} />
               </AddressResultItemContainer>

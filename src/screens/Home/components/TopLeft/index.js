@@ -4,14 +4,17 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import { Drawer, Fade, Grid, Popper, Typography } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import Divider from "@mui/material/Divider";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import hientrang from "~/assets/images/hientrang.jpg";
+import nonghoa from "~/assets/images/nonghoa.jpg";
 import nongnghiep from "~/assets/images/nongnghiep.jpg";
 import quyhoach from "~/assets/images/quyhoach.jpg";
-import nonghoa from "~/assets/images/nonghoa.jpg";
 import thonhuong from "~/assets/images/thonhuong.jpg";
 import logo from "~/assets/images/vnmap.png";
+import { mapSelector } from "~/features/map/mapSlice";
 import "~/styles/styles.css";
 import {
   AddressList,
@@ -19,6 +22,7 @@ import {
   AddressResultList,
   Popup,
 } from "./components";
+import useGetAddressList from "./components/AddressList/hooks/useGetAddressList";
 import {
   ColumnWrapper,
   ContentWrapper,
@@ -33,9 +37,11 @@ import {
 } from "./styled";
 
 const TopLeft = () => {
+  const { map, markers, placeService } = useSelector(mapSelector);
   const [placeList, setPlaceList] = useState([]);
   const [placeDetail, setPlaceDetail] = useState(null);
   const [open, setOpen] = useState(false);
+  const [openResultDrawer, setOpenResultDrawer] = useState(true);
   const [isOpenResult, setIsOpenResult] = useState(false);
   const [isOpenResultDetail, setIsOpenResultDetail] = useState(false);
 
@@ -58,6 +64,12 @@ const TopLeft = () => {
   const [anchorElTN, setAnchorElTN] = useState(null);
   const [openPopperTN, setOpenPopperTN] = useState(false);
   const [placementTN, setPlacementTN] = useState();
+
+  const [searchText, setSearchText] = useState("");
+  const handleGoogleRef = useRef();
+
+  const { data: addressList } = useGetAddressList();
+  const [isLoadingSearchText, setIsLoadingSearchText] = useState(false);
 
   const handleClick = (newPlacement, type) => (event) => {
     setOpenPopperQH(false);
@@ -91,6 +103,51 @@ const TopLeft = () => {
     setOpenPopperNT((prev) => placementNT !== newPlacement || !prev);
     setPlacementNT(newPlacement);
   };
+  function showPosition(pos) {
+    var latLng = new window.google.maps.LatLng(
+      pos.coords.latitude,
+      pos.coords.longitude
+    );
+    map.setCenter(latLng);
+    let pyrmont = new window.google.maps.LatLng(
+      pos.coords.latitude,
+      pos.coords.longitude
+    );
+    let request = {
+      location: pyrmont,
+      radius: "1500",
+      language: "vi",
+      query: searchText,
+      type: getPlaceType(),
+    };
+    placeService.textSearch(request, handleGoogleRef.current.callback);
+  }
+
+  function getPlaceType() {
+    let placeTypeArr = [];
+    addressList.forEach((element) => {
+      placeTypeArr.push(element.code);
+    });
+    return placeTypeArr;
+  }
+
+  const handleSearchByText = () => {
+    setIsLoadingSearchText(true);
+    setIsOpenResultDetail(false);
+    map.overlayMapTypes.pop();
+    if (Array.isArray(markers) && markers.length > 0)
+      for (var i = 0; i < markers.length; i++) markers[i].setMap(null);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+    setIsLoadingSearchText(false);
+  };
+
+  const handleOnChangeSearchText = (event) => {
+    setSearchText(event.target.value);
+  };
 
   return (
     <>
@@ -108,9 +165,17 @@ const TopLeft = () => {
               <MenuIcon color="action" />
             )}
           </IconButton>
-          <SearchInput placeholder="Tìm kiếm trên Vn Map" />
-          <IconButton>
-            <SearchIcon color="action" />
+          <SearchInput
+            placeholder="Tìm kiếm trên Vn Map"
+            value={searchText}
+            onChange={handleOnChangeSearchText}
+          />
+          <IconButton onClick={handleSearchByText}>
+            {isLoadingSearchText ? (
+              <CircularProgress size={20} />
+            ) : (
+              <SearchIcon color="action" />
+            )}
           </IconButton>
           <Divider orientation="vertical" variant="middle" flexItem />
           <IconButton
@@ -129,10 +194,13 @@ const TopLeft = () => {
           </IconButton>
         </SearchBoxWrapper>
         <AddressList
+          addressList={addressList}
           setIsOpenResult={setIsOpenResult}
           setPlaceList={setPlaceList}
           setIsOpenResultDetail={setIsOpenResultDetail}
           setPlaceDetail={setPlaceDetail}
+          setSearchText={setSearchText}
+          ref={handleGoogleRef}
         />
         <Drawer
           anchor="left"
@@ -246,6 +314,14 @@ const TopLeft = () => {
               )}
             </Popper>
           </ContentWrapper>
+        </Drawer>
+        <Drawer
+          anchor="left"
+          open={openResultDrawer}
+          onClose={() => setOpenResultDrawer(false)}
+          hideBackdrop={true}
+        >
+          haha
         </Drawer>
       </TopLeftWrapper>
       {isOpenResult && !isOpenResultDetail && (
