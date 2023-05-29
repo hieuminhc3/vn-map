@@ -7,7 +7,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SearchBoxPopperWrapper } from "../../styled";
 import useGetProvinces from "~/hooks/useGetProvinces";
 import useGetDistricts from "~/hooks/useGetDistricts";
