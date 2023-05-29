@@ -36,8 +36,9 @@ import {
   TopLeftWrapper,
 } from "./styled";
 
-const TopLeft = () => {
+const TopLeft = (props) => {
   const { map, markers, placeService } = useSelector(mapSelector);
+  const { indentifyPaneRef } = props;
   const [placeList, setPlaceList] = useState([]);
   const [placeDetail, setPlaceDetail] = useState(null);
   const [open, setOpen] = useState(false);
@@ -238,6 +239,7 @@ const TopLeft = () => {
               type={3}
             />
             <Popup
+              indentifyPaneRef={indentifyPaneRef}
               setOpen={setOpen}
               openPopper={openPopperQH}
               anchorEl={anchorElQH}

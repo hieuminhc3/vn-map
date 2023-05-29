@@ -1,15 +1,24 @@
-import React from "react";
-import { BottomLeft, BottomRight, Map, TopLeft, TopRight } from "./components";
+import React, { useRef } from "react";
+import {
+  BottomLeft,
+  BottomRight,
+  IndentifyPane,
+  Map,
+  TopLeft,
+  TopRight,
+} from "./components";
 import { HomeScreenWrapper } from "./styled";
 
 const HomeScreen = () => {
+  const indentifyPaneRef = useRef();
   return (
     <HomeScreenWrapper>
       <Map />
-      <TopLeft />
+      <TopLeft indentifyPaneRef={indentifyPaneRef} />
       <TopRight />
       <BottomRight />
       <BottomLeft />
+      <IndentifyPane ref={indentifyPaneRef} />
     </HomeScreenWrapper>
   );
 };

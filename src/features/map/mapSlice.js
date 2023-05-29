@@ -9,6 +9,7 @@ const mapSlice = createSlice({
     placeText: null,
     placeType: null,
     searchText: null,
+    planDataList: [],
   },
   reducers: {
     setMap: (state, action) => {
@@ -32,6 +33,9 @@ const mapSlice = createSlice({
     pushMarker: (state, action) => {
       state.markers = state.markers.concat(action.payload);
     },
+    setPlanDataList: (state, action) => {
+      state.planDataList = action.payload;
+    },
   },
 });
 
@@ -44,6 +48,7 @@ export const {
   setPlaceType,
   setSearchText,
   pushMarker,
+  setPlanDataList,
 } = mapSlice.actions;
 
 //selector

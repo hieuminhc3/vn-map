@@ -6,7 +6,7 @@ const landApi = {
     return axiosClient.get(url);
   },
   async getLmu(params) {
-    const url = "/lmu/getbytypeandmahuyen";
+    const url = "/lmu/get/PlanPeriod/byTypeAndDistrict";
     return axiosClient.get(url, { params: params });
   },
 };

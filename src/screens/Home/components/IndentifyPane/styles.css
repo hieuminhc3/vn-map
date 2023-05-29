@@ -1,0 +1,31 @@
+@keyframes comeIn {
+    from {
+        left: -402px;
+    }
+
+    to {
+        left: 0px;
+    }
+}
+
+@keyframes comeOut {
+    from {
+        left: 0px;
+    }
+
+    to {
+        left: -402px;
+    }
+}
+
+.comeInAnimate {
+    animation-name: comeIn;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+}
+
+.comeOutAnimate {
+    animation-name: comeOut;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+}

@@ -6,7 +6,7 @@ const useGetLmu = (params) =>
     queryKey: ["getLmu", params],
     enabled: Boolean(params && params.type && params.maTinh && params.maHuyen),
     queryFn: () => landApi.getLmu(params),
-    select: (data) => data?.data[0],
+    select: (data) => data?.data,
   });
 
 export default useGetLmu;
