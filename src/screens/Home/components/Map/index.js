@@ -15,7 +15,7 @@ const mapOptions = {
   heading: 0,
   zoom: 18,
   center: { lat: 21.0278, lng: 105.8342 },
-  mapId: "74a4d1b3ca631624",
+  mapId: "f3899ee2372a8eb6",
   zoomControl: false,
   mapTypeControl: false,
   scaleControl: false,

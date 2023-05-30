@@ -7,20 +7,19 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SearchBoxPopperWrapper } from "../../styled";
 import useGetProvinces from "~/hooks/useGetProvinces";
 import useGetDistricts from "~/hooks/useGetDistricts";
 import CloseIcon from "@mui/icons-material/Close";
-import useGetLmu from "./hooks/useGetLmu";
 import { useDispatch, useSelector } from "react-redux";
 import { mapSelector, setPlanDataList } from "~/features/map/mapSlice";
 import { toast } from "react-toastify";
 import useGetWards from "~/hooks/useGetWards";
+import useGetQHLmu from "./hooks/useGetQHLmu";
 
-function Popup(props) {
+function QHPopup(props) {
   const { indentifyPaneRef } = props;
-  const dispatch = useDispatch();
   const { type, setOpen } = props;
   const { map } = useSelector(mapSelector);
   const { openPopper, anchorEl, placement, title, setOpenPopper } = props;
@@ -30,32 +29,55 @@ function Popup(props) {
   const { data: provinceList = [] } = useGetProvinces();
   const { data: districtList = [] } = useGetDistricts(maTinh);
   const { data: wardList = [] } = useGetWards(maHuyen);
-  const { data: lmu = null } = useGetLmu({
+  const { data: planDataList = null } = useGetQHLmu({
     type: type,
     maTinh: maTinh,
     maHuyen: maHuyen,
     maXa: maXa,
   });
+  const dispatch = useDispatch();
   const handleSubmit = () => {
-    if (lmu) {
-      indentifyPaneRef.current.hide();
-      dispatch(setPlanDataList([]));
+    if (Array.isArray(planDataList) && planDataList.length > 0) {
+      let planMapDataList = [];
       map.overlayMapTypes.pop();
-      let overlay = new window.google.maps.ImageMapType({
-        getTileUrl: (coordinates, zoom) => {
-          return `http://103.90.234.132:8080/geoserver/gwc/service/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&LAYER=${lmu.layerName}&STYLE=&FORMAT=image/png&TILEMATRIXSET=EPSG:900913&TILEMATRIX=EPSG:900913:${zoom}&TILECOL=${coordinates.x}&TILEROW=${coordinates.y}`;
-        },
-        tileSize: new window.google.maps.Size(256, 256),
+      let boundCoords = [];
+      planDataList.forEach((element) => {
+        let planMapData = element;
+        element?.lmuDtos.forEach((element) => {
+          let overlay = new window.google.maps.ImageMapType({
+            getTileUrl: (coordinates, zoom) => {
+              return `http://103.90.234.132:8080/geoserver/gwc/service/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&LAYER=${element.layerName}&STYLE=&FORMAT=image/png&TILEMATRIXSET=EPSG:900913&TILEMATRIX=EPSG:900913:${zoom}&TILECOL=${coordinates.x}&TILEROW=${coordinates.y}`;
+            },
+            tileSize: new window.google.maps.Size(256, 256),
+          });
+          //map.overlayMapTypes.push(overlay);
+          element.overlay = overlay;
+          // var point1 = new window.google.maps.LatLng(
+          //   element.pointY1,
+          //   element.pointX1
+          // );
+          // var point2 = new window.google.maps.LatLng(
+          //   element.pointY2,
+          //   element.pointX2
+          // );
+          // boundCoords.push(point1);
+          // boundCoords.push(point2);
+          planMapData = element;
+        });
+        indentifyPaneRef.current.show();
+        planMapDataList.push(planMapData);
       });
-      map.overlayMapTypes.push(overlay);
-      let point1 = new window.google.maps.LatLng(lmu.pointY1, lmu.pointX1);
-      let point2 = new window.google.maps.LatLng(lmu.pointY2, lmu.pointX2);
-      let bounds = new window.google.maps.LatLngBounds();
-      bounds.extend(point1);
-      bounds.extend(point2);
-      map.fitBounds(bounds);
+      // fit bound map
+      // if (Array.isArray(boundCoords) && boundCoords.length > 0) {
+      //   let bounds = new window.google.maps.LatLngBounds();
+      //   boundCoords.forEach((element) => {
+      //     bounds.extend(element);
+      //   });
+      //   map.fitBounds(bounds);
+      // }
       setOpenPopper(false);
       setOpen(false);
+      dispatch(setPlanDataList(planDataList));
     } else {
       toast.error("Bản đồ đang được cập nhật", {
         position: "top-center",
@@ -69,6 +91,7 @@ function Popup(props) {
       });
     }
   };
+  useEffect(() => {}, [planDataList]);
 
   return (
     <>
@@ -177,4 +200,4 @@ function Popup(props) {
   );
 }
 
-export default Popup;
+export default QHPopup;

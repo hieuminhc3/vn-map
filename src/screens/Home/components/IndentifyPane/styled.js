@@ -35,7 +35,6 @@ export const ContentBody = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  padding: 0px 10px;
 `;
 
 export const ToolMenu = styled.div`

@@ -1,23 +1,46 @@
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import SaveIcon from "@mui/icons-material/Save";
-import { LoadingButton } from "@mui/lab";
+import * as React from "react";
 import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
-import Checkbox from "@mui/material/Checkbox";
-import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import useLogin from "./hooks/useLogin";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import useLogin from "./hooks/useLogin";
+import { LoadingButton } from "@mui/lab";
+import { green } from "@mui/material/colors";
 
-const theme = createTheme();
+function Copyright(props) {
+  return (
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      align="center"
+      {...props}
+    >
+      {"Copyright © "}
+      <Link color="inherit" href="https://mui.com/">
+        Your Website
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
+  );
+}
+
+const defaultTheme = createTheme({
+  palette: {
+    primary: green,
+  },
+});
 
 export default function Login() {
   const { mutate: login, isLoading } = useLogin();
@@ -49,79 +72,102 @@ export default function Login() {
       }
     );
   };
-
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
+    <ThemeProvider theme={defaultTheme}>
+      <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
-        <Box
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={7}
           sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            backgroundImage:
+              "url(https://source.unsplash.com/random?wallpapers)",
+            backgroundRepeat: "no-repeat",
+            backgroundColor: (t) =>
+              t.palette.mode === "light"
+                ? t.palette.grey[50]
+                : t.palette.grey[900],
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Đăng nhập
-          </Typography>
+        />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <CssBaseline />
           <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
+            sx={{
+              marginTop: 8,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
           >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="phone"
-              label="Số điện thoại"
-              name="phone"
-              autoComplete="phone"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Mật khẩu"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Nhớ mật khẩu"
-            />
-            <LoadingButton
-              loading={isLoading}
-              loadingPosition="start"
-              startIcon={<SaveIcon />}
-              variant="outlined"
-              type="submit"
-            >
+            <Avatar sx={{ m: 1, bgcolor: "#01A85A" }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
               Đăng nhập
-            </LoadingButton>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Quên mật khẩu?
-                </Link>
+            </Typography>
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              noValidate
+              sx={{ mt: 1 }}
+            >
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="phone"
+                label="Số điện thoại"
+                name="phone"
+                autoComplete="phone"
+                autoFocus
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Mật khẩu"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Nhớ mật khẩu"
+              />
+              <LoadingButton
+                fullWidth
+                loading={isLoading}
+                loadingPosition="start"
+                variant="contained"
+                type="submit"
+                sx={{
+                  color: "white",
+                }}
+              >
+                Đăng nhập
+              </LoadingButton>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Quên mật khẩu?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href="#" variant="body2">
+                    {"Đăng ký"}
+                  </Link>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Đăng ký"}
-                </Link>
-              </Grid>
-            </Grid>
+              <Copyright sx={{ mt: 5 }} />
+            </Box>
           </Box>
-        </Box>
-      </Container>
+        </Grid>
+      </Grid>
     </ThemeProvider>
   );
 }

@@ -1,23 +1,20 @@
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import React, { useImperativeHandle, useState } from "react";
+import React, { useEffect, useImperativeHandle, useState } from "react";
 import "~/screens/Home/components/IndentifyPane/styles.css";
 import { Body, Container, ContentBody, HeaderBody, ToolMenu } from "./styled";
 import Box from "@mui/material/Box";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import { useSelector } from "react-redux";
 import { mapSelector } from "~/features/map/mapSlice";
-import TextSnippetIcon from "@mui/icons-material/TextSnippet";
+import ArticleIcon from "@mui/icons-material/Article";
+import AccordionItem from "./components/AccordionItem";
 
 function IndentifyPane(props, ref) {
   const { map, planDataList } = useSelector(mapSelector);
   const [visible, setVisible] = useState(false);
   const [animationActive, setAnimationActive] = useState(false);
-  const [checked, setChecked] = useState([true, false]);
-
+  const [activeKey, setActiveKey] = useState(0);
   const show = () => {
-    console.log("planDataList: ", planDataList);
     setVisible(true);
     setAnimationActive(true);
   };
@@ -27,36 +24,39 @@ function IndentifyPane(props, ref) {
     setAnimationActive(true);
   };
 
-  const handleChange1 = (event) => {
-    setChecked([event.target.checked, event.target.checked]);
-  };
-
-  const handleChange2 = (event) => {
-    setChecked([event.target.checked, checked[1]]);
-  };
-
-  const handleChange3 = (event) => {
-    setChecked([checked[0], event.target.checked]);
-  };
-
-  const children = (
-    <Box sx={{ display: "flex", flexDirection: "column", ml: 3 }}>
-      <FormControlLabel
-        label="QHHoangHoa"
-        control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-      />
-      <FormControlLabel
-        label="QHHoangHoa2"
-        control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-      />
-    </Box>
-  );
-
   useImperativeHandle(ref, () => {
     return {
       show: show,
+      hide: hide,
     };
   });
+
+  useEffect(() => {
+    if (Array.isArray(planDataList) && planDataList.length > 0) {
+      let boundCoords = [];
+      map.overlayMapTypes.pop();
+      planDataList[0].lmuDtos?.forEach((element) => {
+        map.overlayMapTypes.push(element.overlay);
+        let point1 = new window.google.maps.LatLng(
+          element.pointY1,
+          element.pointX1
+        );
+        let point2 = new window.google.maps.LatLng(
+          element.pointY2,
+          element.pointX2
+        );
+        boundCoords.push(point1);
+        boundCoords.push(point2);
+      });
+      if (Array.isArray(boundCoords) && boundCoords.length > 0) {
+        let bounds = new window.google.maps.LatLngBounds();
+        boundCoords.forEach((element) => {
+          bounds.extend(element);
+        });
+        map.fitBounds(bounds);
+      }
+    }
+  }, [planDataList]);
 
   return (
     <Container
@@ -71,20 +71,13 @@ function IndentifyPane(props, ref) {
         <ContentBody>
           {planDataList && planDataList.length > 0 ? (
             <>
-              {planDataList.map((e, i) => (
-                <>
-                  <FormControlLabel
-                    label={e.planName}
-                    control={
-                      <Checkbox
-                        checked={checked[0] && checked[1]}
-                        indeterminate={checked[0] !== checked[1]}
-                        onChange={handleChange1}
-                      />
-                    }
-                  />
-                  {children}
-                </>
+              {planDataList.map((planData, i) => (
+                <AccordionItem
+                  key={i}
+                  planData={planData}
+                  activeKey={activeKey}
+                  setActiveKey={setActiveKey}
+                />
               ))}
             </>
           ) : (
@@ -99,7 +92,7 @@ function IndentifyPane(props, ref) {
                 backgroundColor: "white",
               }}
             >
-              <TextSnippetIcon color="action" />
+              <ArticleIcon color="action" />
               <p>Không có dữ liệu</p>
             </Box>
           )}

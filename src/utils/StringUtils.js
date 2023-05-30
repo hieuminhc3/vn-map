@@ -12,5 +12,5 @@ export const getPlaceName = (code) => {
 };
 
 export const getGoogleMapApikey = () => {
-  return "AIzaSyBCdBHywFfoBDQKdWBn1-rAusJ0yohygAE";
+  return "AIzaSyBXkPBxD22XifVWkoqGe9HNJtAv_tE4TV0";
 };

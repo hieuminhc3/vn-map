@@ -1,12 +1,12 @@
 import { useQuery } from "react-query";
 import landApi from "~/services/landApi";
 
-const useGetLmu = (params) =>
+const useGetQHLmu = (params) =>
   useQuery({
-    queryKey: ["getLmu", params],
+    queryKey: ["getQHLmu", params],
     enabled: Boolean(params && params.type && params.maTinh && params.maHuyen),
-    queryFn: () => landApi.getLmu(params),
-    select: (data) => data?.data[0],
+    queryFn: () => landApi.getQHLmu(params),
+    select: (data) => data?.data,
   });
 
-export default useGetLmu;
+export default useGetQHLmu;

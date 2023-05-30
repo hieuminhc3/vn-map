@@ -5,8 +5,12 @@ const landApi = {
     const url = "/land/all";
     return axiosClient.get(url);
   },
-  async getLmu(params) {
+  async getQHLmu(params) {
     const url = "/lmu/get/PlanPeriod/byTypeAndDistrict";
+    return axiosClient.get(url, { params: params });
+  },
+  async getLmu(params) {
+    const url = "/lmu/getbytypeandmahuyen";
     return axiosClient.get(url, { params: params });
   },
 };

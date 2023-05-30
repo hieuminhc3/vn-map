@@ -21,6 +21,7 @@ import {
   AddressResultItem,
   AddressResultList,
   Popup,
+  QHPopup,
 } from "./components";
 import useGetAddressList from "./components/AddressList/hooks/useGetAddressList";
 import {
@@ -230,6 +231,7 @@ const TopLeft = (props) => {
               <b>Nông nghiệp</b>
             </ColumnWrapper>
             <Popup
+              indentifyPaneRef={indentifyPaneRef}
               setOpen={setOpen}
               openPopper={openPopperHT}
               anchorEl={anchorElHT}
@@ -238,7 +240,7 @@ const TopLeft = (props) => {
               setOpenPopper={setOpenPopperHT}
               type={3}
             />
-            <Popup
+            <QHPopup
               indentifyPaneRef={indentifyPaneRef}
               setOpen={setOpen}
               openPopper={openPopperQH}
@@ -249,6 +251,7 @@ const TopLeft = (props) => {
               type={4}
             />
             <Popup
+              indentifyPaneRef={indentifyPaneRef}
               setOpen={setOpen}
               openPopper={openPopperNH}
               anchorEl={anchorElNH}
@@ -316,14 +319,6 @@ const TopLeft = (props) => {
               )}
             </Popper>
           </ContentWrapper>
-        </Drawer>
-        <Drawer
-          anchor="left"
-          open={openResultDrawer}
-          onClose={() => setOpenResultDrawer(false)}
-          hideBackdrop={true}
-        >
-          haha
         </Drawer>
       </TopLeftWrapper>
       {isOpenResult && !isOpenResultDetail && (
