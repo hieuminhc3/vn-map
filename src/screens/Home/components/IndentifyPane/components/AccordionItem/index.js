@@ -49,8 +49,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }));
 
 const AccordionItem = (props) => {
-  const { planData, activeKey, setActiveKey } = props;
-  const [expanded, setExpanded] = useState(null);
+  const { planData, expanded, setExpanded, map } = props;
   const [checked, setChecked] = useState([]);
 
   const handleChange = (panel) => (event, newExpanded) => {
@@ -58,28 +57,34 @@ const AccordionItem = (props) => {
   };
 
   useEffect(() => {
-    if (activeKey === planData?.planId) {
+    if (expanded === planData.planId) {
+      map.overlayMapTypes.pop();
+      planData.lmuDtos.forEach((element) => {
+        map.overlayMapTypes.push(element.overlay);
+      });
       const tmpCkds = planData.lmuDtos.map((lmu, j) => true);
       setChecked(tmpCkds);
-      return;
     }
-    if (activeKey !== planData?.planId) {
-      setChecked([]);
-      return;
-    }
-  }, [activeKey, planData]);
+  }, [expanded]);
 
   return (
     <Accordion
-      expanded={expanded === activeKey}
-      onChange={handleChange(activeKey)}
+      expanded={expanded === planData.planId}
+      onChange={handleChange(planData.planId)}
       sx={{ width: "100%" }}
     >
       <AccordionSummary
         aria-controls="panel1d-content"
         id="panel1d-header"
         onClick={(e) => {
-          setActiveKey(planData?.planId);
+          if (expanded !== planData.planId) {
+            map.overlayMapTypes.pop();
+            planData.lmuDtos.forEach((element) => {
+              map.overlayMapTypes.push(element.overlay);
+            });
+          }
+          const tmpCkds = planData.lmuDtos.map((lmu, j) => true);
+          setChecked(tmpCkds);
         }}
       >
         <Typography>{planData.planName}</Typography>
@@ -102,6 +107,9 @@ const AccordionItem = (props) => {
                           return ck;
                         })
                       );
+                      if (event.target.checked)
+                        map.overlayMapTypes.push(lmu.overlay);
+                      else map.overlayMapTypes.pop(lmu.overlay);
                     }}
                   />
                 }

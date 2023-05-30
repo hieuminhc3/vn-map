@@ -13,7 +13,7 @@ function IndentifyPane(props, ref) {
   const { map, planDataList } = useSelector(mapSelector);
   const [visible, setVisible] = useState(false);
   const [animationActive, setAnimationActive] = useState(false);
-  const [activeKey, setActiveKey] = useState(0);
+  const [expanded, setExpanded] = useState(null);
   const show = () => {
     setVisible(true);
     setAnimationActive(true);
@@ -33,6 +33,7 @@ function IndentifyPane(props, ref) {
 
   useEffect(() => {
     if (Array.isArray(planDataList) && planDataList.length > 0) {
+      setExpanded(planDataList[0].planId);
       let boundCoords = [];
       map.overlayMapTypes.pop();
       planDataList[0].lmuDtos?.forEach((element) => {
@@ -73,10 +74,11 @@ function IndentifyPane(props, ref) {
             <>
               {planDataList.map((planData, i) => (
                 <AccordionItem
+                  map={map}
+                  expanded={expanded}
+                  setExpanded={setExpanded}
                   key={i}
                   planData={planData}
-                  activeKey={activeKey}
-                  setActiveKey={setActiveKey}
                 />
               ))}
             </>
