@@ -9,10 +9,14 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { useEffect, useState } from "react";
+import { green } from "@mui/material/colors";
 
 const queryClient = new QueryClient();
 
 const theme = createTheme({
+  palette: {
+    primary: green,
+  },
   components: {
     MuiButton: {
       styleOverrides: {
@@ -20,6 +24,15 @@ const theme = createTheme({
           fontSize: "1rem",
         },
       },
+    },
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
     },
   },
 });

@@ -5,6 +5,7 @@ import TopLeft from "./TopLeft";
 import TopRight from "./TopRight";
 import BottomLeft from "./BottomLeft";
 import IndentifyPane from "./IndentifyPane";
+import TopLeftv3 from "./TopLeftv3";
 
 export {
   TemporaryDrawer,
@@ -14,4 +15,5 @@ export {
   BottomLeft,
   Map,
   IndentifyPane,
+  TopLeftv3,
 };

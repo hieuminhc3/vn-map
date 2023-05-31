@@ -1,13 +1,7 @@
 import styled from "styled-components";
 
 export const TopRightWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  white-space: nowrap;
 `;
 
 export const PopoverWrapper = styled.div`

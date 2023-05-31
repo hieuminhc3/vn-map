@@ -3,7 +3,16 @@ import CloseIcon from "@mui/icons-material/Close";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import { Drawer, Fade, Grid, Popper, Typography } from "@mui/material";
+import {
+  Box,
+  Drawer,
+  Fade,
+  Grid,
+  Popper,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Divider from "@mui/material/Divider";
 import React, { useRef, useState } from "react";
@@ -36,8 +45,19 @@ import {
   SearchInput,
   TopLeftWrapper,
 } from "./styled";
+import TopRight from "../TopRight";
 
-const TopLeft = (props) => {
+const TopLeftv3 = (props) => {
+  const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.up("xs"));
+  const tablet = useMediaQuery(theme.breakpoints.up("sm"));
+  const laptop = useMediaQuery(theme.breakpoints.up("md"));
+  const desktop = useMediaQuery(theme.breakpoints.up("lg"));
+
+  console.log("mobile: ", mobile);
+  console.log("tablet: ", tablet);
+  console.log("laptop: ", laptop);
+  console.log("desktop: ", desktop);
   const { map, markers, placeService } = useSelector(mapSelector);
   const { indentifyPaneRef } = props;
   const [placeList, setPlaceList] = useState([]);
@@ -152,57 +172,132 @@ const TopLeft = (props) => {
 
   return (
     <>
-      <TopLeftWrapper>
-        <SearchBoxWrapper>
-          <IconButton
-            onClick={() => {
-              if (!isOpenResultDetail) setOpen(true);
-              else setIsOpenResultDetail(false);
-            }}
-          >
-            {isOpenResultDetail ? (
-              <ArrowBackIcon color="action" />
-            ) : (
-              <MenuIcon color="action" />
-            )}
-          </IconButton>
-          <SearchInput
-            placeholder="Tìm kiếm trên Vn Map"
-            value={searchText}
-            onChange={handleOnChangeSearchText}
+      <TopLeftWrapper maxWidth={false} disableGutters>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: !laptop ? "column" : "row",
+            width: "100%",
+            gap: "10px",
+          }}
+        >
+          <SearchBoxWrapper>
+            <IconButton
+              onClick={() => {
+                if (!isOpenResultDetail) setOpen(true);
+                else setIsOpenResultDetail(false);
+              }}
+            >
+              {isOpenResultDetail ? (
+                <ArrowBackIcon color="action" />
+              ) : (
+                <MenuIcon color="action" />
+              )}
+            </IconButton>
+            <SearchInput
+              width="100%"
+              placeholder="Tìm kiếm trên Vn Map"
+              value={searchText}
+              onChange={handleOnChangeSearchText}
+            />
+            <IconButton onClick={handleSearchByText}>
+              {isLoadingSearchText ? (
+                <CircularProgress size={20} />
+              ) : (
+                <SearchIcon color="action" />
+              )}
+            </IconButton>
+            <Divider orientation="vertical" variant="middle" flexItem />
+            <IconButton
+              onClick={() => {
+                if (isOpenResult) {
+                  setIsOpenResult(false);
+                  setIsOpenResultDetail(false);
+                }
+              }}
+            >
+              {isOpenResult ? (
+                <CloseIcon color="action" />
+              ) : (
+                <LocationOnIcon color="action" />
+              )}
+            </IconButton>
+          </SearchBoxWrapper>
+          <AddressList
+            width={!laptop ? "unset" : undefined}
+            addressList={addressList}
+            setIsOpenResult={setIsOpenResult}
+            setPlaceList={setPlaceList}
+            setIsOpenResultDetail={setIsOpenResultDetail}
+            setPlaceDetail={setPlaceDetail}
+            setSearchText={setSearchText}
+            ref={handleGoogleRef}
           />
-          <IconButton onClick={handleSearchByText}>
-            {isLoadingSearchText ? (
-              <CircularProgress size={20} />
-            ) : (
-              <SearchIcon color="action" />
-            )}
-          </IconButton>
-          <Divider orientation="vertical" variant="middle" flexItem />
-          <IconButton
-            onClick={() => {
-              if (isOpenResult) {
-                setIsOpenResult(false);
-                setIsOpenResultDetail(false);
-              }
-            }}
-          >
-            {isOpenResult ? (
-              <CloseIcon color="action" />
-            ) : (
-              <LocationOnIcon color="action" />
-            )}
-          </IconButton>
-        </SearchBoxWrapper>
-        <AddressList
-          addressList={addressList}
-          setIsOpenResult={setIsOpenResult}
-          setPlaceList={setPlaceList}
-          setIsOpenResultDetail={setIsOpenResultDetail}
-          setPlaceDetail={setPlaceDetail}
-          setSearchText={setSearchText}
-          ref={handleGoogleRef}
-        />
+        </Box>
+        {laptop && <TopRight />}
+
+        {/* <Grid container>
+          <Grid item xs={12} sm={12} md={4}>
+            <SearchBoxWrapper>
+              <IconButton
+                onClick={() => {
+                  if (!isOpenResultDetail) setOpen(true);
+                  else setIsOpenResultDetail(false);
+                }}
+              >
+                {isOpenResultDetail ? (
+                  <ArrowBackIcon color="action" />
+                ) : (
+                  <MenuIcon color="action" />
+                )}
+              </IconButton>
+              <SearchInput
+                placeholder="Tìm kiếm trên Vn Map"
+                value={searchText}
+                onChange={handleOnChangeSearchText}
+              />
+              <IconButton onClick={handleSearchByText}>
+                {isLoadingSearchText ? (
+                  <CircularProgress size={20} />
+                ) : (
+                  <SearchIcon color="action" />
+                )}
+              </IconButton>
+              <Divider orientation="vertical" variant="middle" flexItem />
+              <IconButton
+                onClick={() => {
+                  if (isOpenResult) {
+                    setIsOpenResult(false);
+                    setIsOpenResultDetail(false);
+                  }
+                }}
+              >
+                {isOpenResult ? (
+                  <CloseIcon color="action" />
+                ) : (
+                  <LocationOnIcon color="action" />
+                )}
+              </IconButton>
+            </SearchBoxWrapper>
+          </Grid>
+          <Grid item xs={12} sm={12} md={4}>
+            <AddressList
+              addressList={addressList}
+              setIsOpenResult={setIsOpenResult}
+              setPlaceList={setPlaceList}
+              setIsOpenResultDetail={setIsOpenResultDetail}
+              setPlaceDetail={setPlaceDetail}
+              setSearchText={setSearchText}
+              ref={handleGoogleRef}
+            />
+          </Grid>
+          {laptop && (
+            <Grid item xs={12} sm={12} md={2}>
+              <TopRight />
+            </Grid>
+          )}
+        </Grid> */}
+
         <Drawer
           anchor="left"
           open={open}
@@ -334,4 +429,4 @@ const TopLeft = (props) => {
   );
 };
 
-export default TopLeft;
+export default TopLeftv3;
