@@ -4,24 +4,25 @@ import {
   BottomRight,
   IndentifyPane,
   Map,
-  TopLeft,
-  TopRight,
   TopLeftv3,
 } from "./components";
 import { HomeScreenWrapper } from "./styled";
-import TopLeftv2 from "./components/TopLeftv2";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const HomeScreen = () => {
+  const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.up("xs"));
+  const tablet = useMediaQuery(theme.breakpoints.up("sm"));
+  const laptop = useMediaQuery(theme.breakpoints.up("md"));
+  const desktop = useMediaQuery(theme.breakpoints.up("lg"));
   const indentifyPaneRef = useRef();
   return (
     <HomeScreenWrapper>
       <Map />
       <TopLeftv3 indentifyPaneRef={indentifyPaneRef} />
-      {/* <TopLeft indentifyPaneRef={indentifyPaneRef} /> */}
-
       <BottomRight />
       <BottomLeft />
-      <IndentifyPane ref={indentifyPaneRef} />
+      {laptop && <IndentifyPane ref={indentifyPaneRef} />}
     </HomeScreenWrapper>
   );
 };

@@ -59,8 +59,8 @@ const AccordionItem = (props) => {
   useEffect(() => {
     if (expanded === planData.planId) {
       map.overlayMapTypes.pop();
-      planData.lmuDtos.forEach((element) => {
-        map.overlayMapTypes.push(element.overlay);
+      planData.lmuDtos.forEach((element, i) => {
+        map.overlayMapTypes.setAt(i, element.overlay);
       });
       const tmpCkds = planData.lmuDtos.map((lmu, j) => true);
       setChecked(tmpCkds);
@@ -79,8 +79,8 @@ const AccordionItem = (props) => {
         onClick={(e) => {
           if (expanded !== planData.planId) {
             map.overlayMapTypes.pop();
-            planData.lmuDtos.forEach((element) => {
-              map.overlayMapTypes.push(element.overlay);
+            planData.lmuDtos.forEach((element, i) => {
+              map.overlayMapTypes.setAt(i, element.overlay);
             });
           }
           const tmpCkds = planData.lmuDtos.map((lmu, j) => true);
@@ -108,8 +108,8 @@ const AccordionItem = (props) => {
                         })
                       );
                       if (event.target.checked)
-                        map.overlayMapTypes.push(lmu.overlay);
-                      else map.overlayMapTypes.pop(lmu.overlay);
+                        map.overlayMapTypes.setAt(j, lmu.overlay);
+                      else map.overlayMapTypes.setAt(j, null);
                     }}
                   />
                 }

@@ -50,31 +50,12 @@ function QHPopup(props) {
             },
             tileSize: new window.google.maps.Size(256, 256),
           });
-          //map.overlayMapTypes.push(overlay);
           element.overlay = overlay;
-          // var point1 = new window.google.maps.LatLng(
-          //   element.pointY1,
-          //   element.pointX1
-          // );
-          // var point2 = new window.google.maps.LatLng(
-          //   element.pointY2,
-          //   element.pointX2
-          // );
-          // boundCoords.push(point1);
-          // boundCoords.push(point2);
           planMapData = element;
         });
         indentifyPaneRef.current.show();
         planMapDataList.push(planMapData);
       });
-      // fit bound map
-      // if (Array.isArray(boundCoords) && boundCoords.length > 0) {
-      //   let bounds = new window.google.maps.LatLngBounds();
-      //   boundCoords.forEach((element) => {
-      //     bounds.extend(element);
-      //   });
-      //   map.fitBounds(bounds);
-      // }
       setOpenPopper(false);
       setOpen(false);
       dispatch(setPlanDataList(planDataList));
